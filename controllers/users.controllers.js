@@ -1,38 +1,71 @@
+import {User} from "../models/user.models.js";
+import bcrypt from "bcryptjs";
+export const usersGet = async(req, res) => {
 
-export const usersGet = (req, res) => {
-
-    const {q, name = 'No name', apikey, page = 1, limit} = req.query;
+    const {limit = 5, from = 0} = req.query;
+    const query = {deleted: false};
+    const [total, users] = await Promise.all([
+        User.countDocuments({query}),
+        User.find({ query })
+            .skip(from)
+            .limit(limit)
+    ]);
     res.json({
-        msg: 'get API',
-        q,
-        name,
-        apikey,
-        page,
-        limit
+        total,
+        users
     });
 }
 
-export const usersPut = (req, res) => {
-    const { id } = req.params;
+export const usersPut = async(req, res) => {
+    const {id} = req.params;
+    const {password,google,_id,...rest} = req.body;
+
+    //TODO: Validate against DB
+    if (password) {
+        // Encrypt password
+        const salt = bcrypt.genSaltSync();
+        rest.password = bcrypt.hashSync(password, salt);
+    }
+
+    const user = await User.findByIdAndUpdate(id, rest);
 
     res.status(201).json({
         msg: 'put API',
-        id
+        user
     });
 }
 
-export const usersPost = (req, res) => {
-    const {name, age} = req.body;
-    res.status(201).json({
-        msg: 'post API',
+export const usersPost = async (req, res) => {
+
+    const {name, email, password, role} = req.body;
+    const user = new User({
         name,
-        age
+        email,
+        password,
+        role
+    });
+    // Encrypt password
+    const salt = bcrypt.genSaltSync();
+    user.password = bcrypt.hashSync(password, salt);
+
+    // Save user
+    await user.save();
+    res.status(201).json({
+        user
     });
 }
 
-export const usersDelete = (req, res) => {
+export const usersDelete = async (req, res) => {
+    const {id} = req.params;
+
+    // Delete UserFiscally
+    // const user = await User.findByIdAndDelete(id);
+
+    // Delete User Logically
+    const user = await User.findByIdAndUpdate(id, {deleted: true});
+
     res.json({
-        msg: 'delete API'
+        user
     });
 }
 
