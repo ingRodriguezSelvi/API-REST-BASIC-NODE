@@ -18,5 +18,13 @@ authRoutes.post(
     ],
     authController.login);
 
+authRoutes.post(
+    '/google',
+    [
+        check('id_token', 'id_token is required').not().isEmpty(),
+        validateErrors
+    ],
+    authController.googleSignIn);
+
 
 export default authRoutes;
