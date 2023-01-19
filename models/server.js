@@ -2,12 +2,14 @@ import express from "express";
 import cors from "cors";
 import userRoutes from "../routes/user.routes.js";
 import {dbConnection} from "../database/config.db.js";
+import authRoutes from "../routes/auth.routes.js";
 
 export class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
         this.userPath = '/api/users';
+        this.authPath = '/api/auth';
 
         // Connect to database
          this.dbConnection().then();
@@ -29,6 +31,7 @@ export class Server {
     //Routes
     routes() {
        this.app.use( this.userPath, userRoutes );
+       this.app.use( this.authPath, authRoutes );
     }
     // Middlewares
     middlewares() {

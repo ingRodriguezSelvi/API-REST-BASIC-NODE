@@ -2,8 +2,10 @@ import {Router} from "express";
 
 import {check} from "express-validator";
 import {usersDelete, usersGet, usersPatch, usersPost, usersPut} from "../controllers/users.controllers.js";
-import {validateErrors} from "../middlewares/validate-errors.js";
+
 import {emailExist, isRoleValid, userExistById} from "../helpers/db-validators.js";
+import {hasRole, validateErrors, validateJWT} from "../middlewares/index.js";
+
 
 const userRouter = Router();
 
@@ -25,6 +27,9 @@ userRouter.post('/', [
 ], usersPost);
 
 userRouter.delete('/:id', [
+    validateJWT,
+    //isAdminRole,
+    hasRole('ADMIN_ROLE', 'SALES_ROLE'),
     check('id', 'Not a valid ID').isMongoId(),
     check('id').custom(userExistById),
     validateErrors

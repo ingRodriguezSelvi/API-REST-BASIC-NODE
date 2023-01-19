@@ -58,7 +58,7 @@ export const usersPost = async (req, res) => {
 export const usersDelete = async (req, res) => {
 
     const {id} = req.params;
-
+    const userAuth = req.userAuth;
     // Delete UserFiscally
     // const user = await User.findByIdAndDelete(id);
 
