@@ -1,7 +1,7 @@
 
-import {validateErrors} from "../middlewares/validate-errors.js";
-import {validateJWT} from "../middlewares/validate-jwt.js";
-import {hasRole, isAdminRole} from "../middlewares/validate-roles.js";
+import {validateErrors} from "./validate-errors.js";
+import {validateJWT} from "./validate-jwt.js";
+import {hasRole, isAdminRole} from "./validate-roles.js";
 
 export {
     validateErrors,

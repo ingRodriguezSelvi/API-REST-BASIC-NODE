@@ -1,7 +1,7 @@
 import {Router} from "express";
 
 import {check} from "express-validator";
-import {usersDelete, usersGet, usersPatch, usersPost, usersPut} from "../controllers/users.controllers.js";
+import {usersDelete, usersGet, usersPatch, usersPost, usersPut} from "../controllers/users.controller.js";
 
 import {emailExist, isRoleValid, userExistById} from "../helpers/db-validators.js";
 import {hasRole, validateErrors, validateJWT} from "../middlewares/index.js";

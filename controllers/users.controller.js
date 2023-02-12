@@ -6,7 +6,7 @@ export const usersGet = async(req, res) => {
     const query = {deleted: false};
     const [total, users] = await Promise.all([
         User.countDocuments({query}),
-        User.find({ query })
+        User.find( query )
             .skip(from)
             .limit(limit)
     ]);

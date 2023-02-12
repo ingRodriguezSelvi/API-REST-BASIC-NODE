@@ -1,8 +1,11 @@
 import {response} from "express";
 import bcryptjs from "bcryptjs";
-import {User} from "../models/user.models.js";
+import {User} from "../models/index.js";
 import {generateJWT} from "../helpers/generate-jwt.js";
 import {googleVerify} from "../helpers/google-verify.js";
+import {Clevertap} from "../helpers/clevertap.js";
+import log4js from "log4js"
+const logger = log4js.getLogger()
 
 export const login = async (req, res = response) => {
 
@@ -37,31 +40,31 @@ export const login = async (req, res = response) => {
 export const googleSignIn = async (req, res = response) => {
 
     const {id_token} = req.body;
+    const clevertap = new Clevertap();
     try {
-        const {name,picture,email} = await  googleVerify(id_token);
+        const {name, picture, email} = await googleVerify(id_token);
 
         let user = await User.findOne({email});
 
-        if(!user){
+        if (!user) {
             const data = {
                 name,
                 email,
-                img:picture,
-                password:'null',
-                role:'USER_ROLE',
-                google:true,
+                img: picture,
+                password: 'null',
+                role: 'USER_ROLE',
+                google: true,
             }
             user = new User(data);
             await user.save();
         }
-        if (user.deleted){
+        if (user.deleted) {
             res.status(401).json({
-                msg:'User deleted of app'
+                msg: 'User deleted of app'
             })
         }
 
         const token = await generateJWT(user.id);
-
         res.json({
             msg: 'Google sign in',
             user,
@@ -69,7 +72,7 @@ export const googleSignIn = async (req, res = response) => {
         });
     } catch (error) {
         res.status(400).json({
-            ok:false,
+            ok: false,
             msg: 'The token no have verify',
             error
         })
