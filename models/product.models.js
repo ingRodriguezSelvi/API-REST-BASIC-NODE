@@ -26,7 +26,8 @@ const ProductSchema = new Schema({
         required: true
     },
     description:{ type: String },
-    inStock:{ type:Boolean, default:true }
+    inStock:{ type:Boolean, default:true },
+    img: { type: String }
 
 });
 

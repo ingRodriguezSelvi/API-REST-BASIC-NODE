@@ -6,6 +6,8 @@ import authRoutes from "../routes/auth.routes.js";
 import categoriesRoutes from "../routes/categories.routes.js";
 import productsRoutes from "../routes/products.routes.js";
 import searchRoutes from "../routes/search.routes.js";
+import uploadsRouter from "../routes/uploads.routes.js";
+import fileUpload from "express-fileupload/lib/index.js"
 
 export class Server {
     constructor() {
@@ -16,7 +18,8 @@ export class Server {
             search:     '/api/search',
             categories: '/api/categories',
             users:      '/api/users',
-            products:   '/api/products'
+            products:   '/api/products',
+            uploads:     '/api/uploads'
         }
 
         // Connect to database
@@ -43,6 +46,7 @@ export class Server {
        this.app.use( this.paths.search, searchRoutes );
        this.app.use(this.paths.products, productsRoutes)
        this.app.use( this.paths.categories, categoriesRoutes );
+        this.app.use( this.paths.uploads, uploadsRouter );
     }
     // Middlewares
     middlewares() {
@@ -52,6 +56,13 @@ export class Server {
         this.app.use(express.json());
         // Public directory
         this.app.use(express.static('public'));
+
+        //Upload File
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }))
     }
 
     async dbConnection() {

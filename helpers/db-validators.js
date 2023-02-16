@@ -36,3 +36,13 @@ export const ProductExistById = async(id) => {
         throw new Error(`The product with id ${id} does not exist`);
     }
 }
+/**
+ * Validar colecciones permitidas
+ */
+export const collectionsPermite = (collection = '',collections =[]) =>{
+    const include = collections.includes(collection);
+    if (!include){
+        throw new Error(`The collection ${collection} is no permite`)
+    }
+    return true;
+}
